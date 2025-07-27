@@ -1,21 +1,23 @@
 # Contribution Guide
 
-Hey there! We are really excited that you are interested in contributing. This is a general contribution guide for most of [Lumirelle's projects](https://lumirelle.me/projects). Before submitting your contribution, please make sure to take a moment and read through the following guide:
+Hey there! I'm really excited that you are interested in contributing. This is a general contribution guide for most of [Lumirelle's projects](https://lumirelle.me/projects). Before submitting your contribution, please make sure to take a moment and read through the following guide:
 
 ## 👨‍💻 Repository Setup
 
-We use [`pnpm`](https://pnpm.io/) for most of the projects, we highly recommend you install [`ni`](https://github.com/antfu/ni) so you don't need to worry about the package manager when switching across different projects.
+I use [`pnpm`](https://pnpm.io/) for most of the projects, we highly recommend you install [`ni`](https://github.com/antfu/ni) so you don't need to worry about the package manager when switching across different projects.
 
-We will use `ni`'s commands in the following code snippets. If you are not using it, you can do the conversion yourself: `ni = pnpm install`, `nr = pnpm run`.
+I will use `ni`'s commands in the following code snippets. If you are not using it, you can do the conversion yourself: `ni = pnpm install`, `nr = pnpm run`.
 
 To set the repository up:
 
 | Step | Command |
-|-------|--------|
-| 1. Install [Node.js](https://nodejs.org/), using the [latest LTS](https://nodejs.org/en/about/releases/) | - |
-| 2. [Enable Corepack](#corepack) | `corepack enable` |
-| 3. Install [`@antfu/ni`](https://github.com/antfu/ni) | `npm i -g @antfu/ni` |
-| 4. Install dependencies under the project root | `ni` |
+| ---- | ------- |
+| 1. Install [fnm](https://github.com/Schniz/fnm), a fast Node.js version manager | [Installation guide](https://github.com/Schniz/fnm#installation) |
+| 2. Setup your shell with fnm | [Completions guide](https://github.com/Schniz/fnm#completions) |
+| 3. Install [Node.js](https://nodejs.org/), using the [latest LTS](https://nodejs.org/en/about/releases/) | `fnm i lts` |
+| 4. [Enable Corepack](#corepack) | `corepack enable` |
+| 5. Install [`@antfu/ni`](https://github.com/antfu/ni) | `npm i -g @antfu/ni` |
+| 6. Install dependencies under the project root | `ni` |
 
 ## 💡 Commands
 
@@ -75,7 +77,9 @@ For typo fixes, it's recommended to batch multiple typo fixes into one pull requ
 
 ### Commit Convention
 
-We use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, which allows the changelog to be auto-generated based on the commits. Please read the guide through if you aren't familiar with it already.
+I use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, which allows the changelog to be auto-generated based on the commits. Please read the guide through if you aren't familiar with it already.
+
+You can also use `commitizen` with `cz-git`, or vscode extension `vivaxy.vscode-conventional-commits` to help you make conventional commits.
 
 Only `fix:` and `feat:` will be presented in the changelog.
 
@@ -98,7 +102,7 @@ fix #123
 
 This will let GitHub know the issues are linked, and automatically close them once the PR gets merged. Learn more at [the guide](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).
 
-It's ok to have multiple commits in a single PR, you don't need to rebase or force push for your changes as we will use `Squash and Merge` to squash the commits into one commit when merging.
+It's ok to have multiple commits in a single PR, you don't need to rebase or force push for your changes as I will use `Squash and Merge` to squash the commits into one commit when merging.
 
 ## 🧑‍🔧 Maintenance
 
@@ -106,19 +110,19 @@ This section is for maintainers with write access, or if you want to maintain yo
 
 ### Update Dependencies
 
-Keeping dependencies up-to-date is one of the important aspects to keep projects alive and getting latest bug fixes on time. We recommend to update dependencies in weekly or bi-weekly intervals.
+Keeping dependencies up-to-date is one of the important aspects to keep projects alive and getting latest bug fixes on time. I recommend to update dependencies in weekly or bi-weekly intervals.
 
-We use [`taze`](https://github.com/antfu/taze) to update the dependencies manually most of the time. As deps updating bots like [Dependabot](https://github.com/dependabot) or [Renovate](https://renovatebot.com/) could be a bit annoying when you have a lot projects.
+I use [`taze`](https://github.com/antfu/taze) to update the dependencies manually most of the time. As deps updating bots like [Dependabot](https://github.com/dependabot) or [Renovate](https://renovatebot.com/) could be a bit annoying when you have a lot projects.
 
 With `taze`, you can run `taze major -Ir` to check and select the versions to update interactive. `-I` stands for `--interactive`, `-r` stands for `--recursive` for monorepo.
 
-After bumpping, we install them, runing build and test to verify nothing breaks before pushing to main.
+After bumpping, I install them, runing build and test to verify nothing breaks before pushing to main.
 
 ### Releasing
 
 Before you do, make sure you have lastest git commit from upstream and all CI passes.
 
-For most of the time, we do `nr release`. It will prompts a list for the target version you want to release. After select, it will bump your package.json and commit the changes with git tag, powered by [`bumpp`](https://github.com/antfu/bumpp).
+For most of the time, I do `nr release`. It will prompts a list for the target version you want to release. After select, it will bump your package.json and commit the changes with git tag, powered by [`bumpp`](https://github.com/antfu/bumpp).
 
 There are two kinds of publishing setup, either of them are done by `nr release` already.
 
@@ -168,6 +172,14 @@ corepack enable
 
 You only need to do it once after Node.js is installed.
 
+Of course, you can also transmit the option `--corepack-enabled` while setting up fnm on your shell.
+
+After that, fnm will automatically enable corepack every time you install a new version of Node.js.
+
+```bash
+eval "$(fnm env --use-on-cd --corepack-enabled --shell bash)"
+```
+
 <table><tr><td width="500px" valign="top">
 
 #### What's Corepack
@@ -190,13 +202,13 @@ Under projects with configuration as shown on the right, corepack will install `
 
 ### ESLint
 
-We use [ESLint](https://eslint.org/) for both linting and formatting with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config).
+I use [ESLint](https://eslint.org/) for both linting and formatting with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config).
 
 <table><tr><td width="500px" valign="top">
 
 #### IDE Setup
 
-We recommend using [VS Code](https://code.visualstudio.com/) along with the [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+I recommend using [VS Code](https://code.visualstudio.com/) along with the [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
 With the settings on the right, you can have auto fix and formatting when you save the code you are editing.
 
@@ -217,9 +229,9 @@ VS Code's `settings.json`
 
 ### No Prettier
 
-Since ESLint is already configured to format the code, there is no need to duplicate the functionality with Prettier ([*Why I don't Use Prettier*](https://antfu.me/posts/why-not-prettier)). To format the code, you can run `nr lint --fix` or referring the [ESLint section](#eslint) for IDE Setup.
+Since ESLint is already configured to format the code, there is no need to duplicate the functionality with Prettier ([_Why I don't Use Prettier_](https://antfu.me/posts/why-not-prettier)). To format the code, you can run `nr lint --fix` or referring the [ESLint section](#eslint) for IDE Setup.
 
-If you have Prettier installed in your editor, we recommend you disable it when working on the project to avoid conflict.
+If you have Prettier installed in your editor, I recommend you disable it when working on the project to avoid conflict.
 
 ## 🗒 Additional Info
 
@@ -230,7 +242,26 @@ In case you are interested in, here is Lumirelle's personal configrations and se
 CLI Tools
 
 - [ni](https://github.com/antfu/ni) - package manager alias
+- [nip](https://github.com/antfu/nip) - pnpm catalogs support
 - [taze](https://github.com/antfu/taze) - dependency updater
 - [bumpp](https://github.com/antfu/bumpp) - version bumpper
+- [changelogithub](https://github.com/antfu/changelogithub) - changelog generator
 
 In addition of `ni`, here is a few shell aliases to be even lazier:
+
+- `dev`: alias for `nr dev`
+- `build`: alias for `nr build`
+- `stub`: alias for `nr stub`
+- `start`: alias for `nr start`
+- `release`: alias for `nr release`
+- `lint`: alias for `nr lint`
+- `typecheck`: alias for `nr typecheck`
+
+You can also add the `node_modules/.bin` to your `PATH` while you are in a node project, so you can run the scripts directly without `npx`.
+
+```bash
+# Add current node_modules/.bin to PATH if it exists, so we can run npm scripts without `npx`
+if [ -d node_modules ]; then
+  export PATH="$PWD/node_modules/.bin:$PATH";
+fi
+```
