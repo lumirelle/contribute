@@ -4,20 +4,26 @@ Hey there! I'm really excited that you are interested in contributing. This is a
 
 ## 👨‍💻 Repository Setup
 
-I use [`pnpm`](https://pnpm.io/) for most of the projects, we highly recommend you install [`ni`](https://github.com/antfu/ni) so you don't need to worry about the package manager when switching across different projects.
+We use `bun` for the Bun projects, and [`pnpm`](https://pnpm.io/) for the Node.js projects. We highly recommend you install [`ni`](https://github.com/antfu/ni) so you don't need to worry about the package manager when switching across different projects.
 
-I will use `ni`'s commands in the following code snippets. If you are not using it, you can do the conversion yourself: `ni = pnpm install`, `nr = pnpm run`.
+We will use `ni`'s commands in the following code snippets. If you are not using it, you can do the conversion yourself: `ni = pnpm/bun install`, `nr = pnpm/bun run`.
 
-To set the repository up:
+To set the `Bun` repository up:
 
 | Step | Command |
 | ---- | ------- |
-| 1. Install [fnm](https://github.com/Schniz/fnm), a fast Node.js version manager | [Installation guide](https://github.com/Schniz/fnm#installation) |
-| 2. Setup your shell with fnm | [Setup guide](https://github.com/Schniz/fnm#completions) |
-| 3. Install [Node.js](https://nodejs.org/), using the [latest LTS](https://nodejs.org/en/about/releases/) | e.g. `fnm i 22` |
-| 4. [Enable Corepack](#corepack) | `corepack enable` |
-| 5. Install [`@antfu/ni`](https://github.com/antfu/ni) | `npm i -g @antfu/ni` |
-| 6. Install dependencies under the project root | `ni` |
+| 1. Install [Bun](https://bun.com/) | `curl -fsSL https://bun.sh/install \| bash` or `powershell -c "irm bun.sh/install.ps1 \| iex"` |
+| 2. Install [`@antfu/ni`](https://github.com/antfu/ni) | `bun i -g @antfu/ni` |
+| 3. Install dependencies under the project root | `ni` |
+
+To set the `Node.js` repository up:
+
+| Step | Command |
+| ---- | ------- |
+| 1. Install [Node.js](https://nodejs.org/), using the [latest LTS](https://nodejs.org/en/about/releases/) | [Installation Guides](https://nodejs.org/en/download) |
+| 2. [Enable Corepack](#corepack) | `corepack enable` |
+| 3. Install [`@antfu/ni`](https://github.com/antfu/ni) (If you already install this package on bun, you can skip this step) | `npm i -g @antfu/ni` |
+| 4. Install dependencies under the project root | `ni` |
 
 ## 💡 Commands
 
@@ -29,10 +35,6 @@ If it's a Node.js package, it will start the build process in watch mode using [
 
 If it's a frontend project, it usually starts the dev server. You can then develop and see the changes in real time.
 
-### `nr play`
-
-If it's a Node.js package, it starts a dev server for the playground. The code is usually under `playground/`.
-
 ### `nr build`
 
 Build the project for production. The result is usually under `dist/`.
@@ -42,6 +44,14 @@ Build the project for production. The result is usually under `dist/`.
 If the project is a server application, you can run `nr start` to start the server after building the project.
 
 If the project is a CLI tool, you can run `nr start` to run the CLI after building the project.
+
+### `nr docs`
+
+If the project contains documentation, you can run `nr docs` to start the documentation dev server. Use `nr docs:build` to build the docs for production.
+
+### `nr play`
+
+If it's a Node.js package, it starts a dev server for the playground. The code is usually under `playground/`.
 
 ### `nr lint`
 
@@ -53,25 +63,37 @@ Learn more about the [ESLint Setup](#eslint).
 
 [**We don't use Prettier**](#no-prettier).
 
-### `nr test`
-
-Run the tests. We mostly using [Vitest](https://vitest.dev/) - a replacement of [Jest](https://jestjs.io/).
-
-You can filter the tests to be run by `nr test [match]`, for example, `nr test foo` will only run test files that contain `foo`.
-
-Config options are often under the `test` field of `vitest.config.ts` or `vite.config.ts`.
-
-Vitest runs in [watch mode by default](https://vitest.dev/guide/features.html#watch-mode), so you can modify the code and see the test result automatically, which is great for [test-driven development](https://en.wikipedia.org/wiki/Test-driven_development). To run the test only once, you can do `nr test --run`.
-
-For some projects, we might have multiple types of tests set up. For example `nr test:unit` for unit tests, `nr test:e2e` for end-to-end tests. `nr test` commonly run them together, you can run them separately as needed.
-
 ### `nr typecheck`
 
 If the project is written in TypeScript, you can run `nr typecheck` to run the TypeScript compiler with `--noEmits` option to make sure there is no type errors.
 
-### `nr docs`
+### `nr usagecheck`
 
-If the project contains documentation, you can run `nr docs` to start the documentation dev server. Use `nr docs:build` to build the docs for production.
+We believe less is more.
+
+We use [knip](https://knip.dev/) for usage checking to make sure there is no unused dependencies/files, or missing dependencies/files.
+
+### `nr check`
+
+To run all checks (lint, typecheck, usagecheck), you can run `nr check`.
+
+### `nr test`
+
+Run the tests. We mostly using Bun for the Bun projects, and [Vitest](https://vitest.dev/) for Node.js projects - a replacement of [Jest](https://jestjs.io/).
+
+You can filter the tests to be run by `nr test [match]`, for example, `nr test foo` will only run test files that contain `foo`.
+
+For some projects, we might have multiple types of tests set up. For example `nr test:unit` for unit tests, `nr test:e2e` for end-to-end tests. `nr test` commonly run them together, you can run them separately as needed.
+
+#### Bun
+
+Config options are often under the `test` field of `bunfig.toml`.
+
+#### Vitest
+
+Config options are often under the `test` field of `vitest.config.ts` or `vite.config.ts`.
+
+Vitest runs in [watch mode by default](https://vitest.dev/guide/features.html#watch-mode), so you can modify the code and see the test result automatically, which is great for [test-driven development](https://en.wikipedia.org/wiki/Test-driven_development). To run the test only once, you can do `nr test --run`.
 
 ### `nr release`
 
@@ -79,7 +101,7 @@ Release a new version. It will prompt you to select the target version, bump the
 
 Please ensure you have have the latest code from upstream and all tests pass before releasing.
 
-You should login to NPM and have publishing access to the package before releasing.
+In most cases, we have a `prerelease` script to run all checks and tests before releasing.
 
 ### `nr`
 
@@ -95,9 +117,7 @@ For typo fixes, it's recommended to batch multiple typo fixes into one pull requ
 
 ### Commit Convention
 
-I use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, which allows the changelog to be auto-generated based on the commits. Please read the guide through if you aren't familiar with it already.
-
-You can also use `czg`, which is a cli tool published on NPM, can help you make conventional commits.
+We use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, which allows the changelog to be auto-generated based on the commits. Please read the guide through if you aren't familiar with it already.
 
 Only `fix:` and `feat:` will be presented in the changelog.
 
@@ -128,49 +148,29 @@ This section is for maintainers with write access, or if you want to maintain yo
 
 ### Update Dependencies
 
-Keeping dependencies up-to-date is one of the important aspects to keep projects alive and getting latest bug fixes on time. I recommend to update dependencies in weekly or bi-weekly intervals.
+Keeping dependencies up-to-date is one of the important aspects to keep projects alive and getting latest bug fixes on time. We recommend to update dependencies in weekly or bi-weekly intervals.
 
-I use [`taze`](https://github.com/antfu/taze) to update the dependencies manually most of the time. As deps updating bots like [Dependabot](https://github.com/dependabot) or [Renovate](https://renovatebot.com/) could be a bit annoying when you have a lot projects.
+We use [`taze`](https://github.com/antfu/taze) to update the dependencies manually most of the time. As deps updating bots like [Dependabot](https://github.com/dependabot) or [Renovate](https://renovatebot.com/) could be a bit annoying when you have a lot projects.
 
 With `taze`, you can run `taze major -Ir` to check and select the versions to update interactive. `-I` stands for `--interactive`, `-r` stands for `--recursive` for monorepo.
 
-After bumpping, I install them, runing build and test to verify nothing breaks before pushing to main.
+After bumpping, `taze` will install them, then you should runing check, build and test to verify nothing breaks before pushing to main.
 
 ### Releasing
 
 Before you do, make sure you have lastest git commit from upstream and all CI passes.
 
-For most of the time, I do `nr release`. It will prompts a list for the target version you want to release. After select, it will bump your package.json and commit the changes with git tag, powered by [`bumpp`](https://github.com/antfu/bumpp).
+For most of the time, We do `nr release`. It will prompts a list for the target version you want to release. After select, it will bump your package.json and commit the changes with git tag, powered by [`bumpp`](https://github.com/antfu/bumpp).
 
-There are two kinds of publishing setup, either of them are done by `nr release` already.
+As NPM will [deprecate the access tokens soon](https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/), now we only build packages on CI:
 
-<table><tr><td width="500px" valign="top">
-
-#### Build Locally
-
-For this type of setup, the building and publishing process is done on your local machine. Make sure you have your local [`npm` logged in](http://npm.github.io/installation-setup-docs/installing/logging-in-and-out.html) before doing that.
-
-In `package.json`, we usually have:
-
-```json
-{
-  "scripts": {
-    "prepublishOnly": "nr build"
-  }
-}
-```
-
-So whenever you run `npm publish`, it will make sure you have the latest change in the distribution.
-
-</td><td width="500px" valign="top">
+<table><tr><td valign="top">
 
 #### Build on CI
 
-For complex projects that take long time to build, we might move the building and publishing process to CI. So it doesn't block your local workflow.
-
 They will be triggered by the `v` prefixed git tag added by `bumpp`. The action is usually defined under `.github/workflows/release.yml`
 
-> When maintaining your own fork, you might need to see `NPM_TOKEN` secret to your repository for it to publish the packages.
+> When maintaining your own fork, you should change the package name and publish manually at the first time, then following the [guides](https://docs.npmjs.com/trusted-publishers) and setup trusted publishing on your NPM dashboard.
 
 </td></tr></table>
 
@@ -178,7 +178,7 @@ Changelogs are always generated by GitHub Actions.
 
 ## 📖 References
 
-### Corepack
+### Corepack (Only for the Node.js projects)
 
 #### TL;DR
 
@@ -189,14 +189,6 @@ corepack enable
 ```
 
 You only need to do it once after Node.js is installed.
-
-Of course, you can also transmit the option `--corepack-enabled` while setting up fnm on your shell.
-
-After that, fnm will automatically enable corepack every time you install a new version of Node.js.
-
-```bash
-eval "$(fnm env --use-on-cd --corepack-enabled --shell bash)"
-```
 
 <table><tr><td width="500px" valign="top">
 
@@ -286,29 +278,20 @@ In case you are interested in, here is Lumirelle's personal configrations and se
 
 CLI Tools
 
+- [@sxzz/create](https://github.com/sxzz/create) - Command-line for creating projects from templates.
 - [ni](https://github.com/antfu/ni) - package manager alias
-- [nip](https://github.com/antfu/nip) - pnpm catalogs support
 - [taze](https://github.com/antfu/taze) - dependency updater
-- [bumpp](https://github.com/antfu/bumpp) - version bumpper
-- [changelogithub](https://github.com/antfu/changelogithub) - changelog generator
 
 In addition of `ni`, here is a few shell aliases to be even lazier:
 
 - `dev`: alias for `nr dev`
-- `play`: alias for `nr play`
 - `build`: alias for `nr build`
 - `start`: alias for `nr start`
-- `lint`: alias for `nr lint`
-- `test`: alias for `nr test`
-- `typecheck`: alias for `nr typecheck`
 - `docs`: alias for `nr docs`
+- `play`: alias for `nr play`
+- `lint`: alias for `nr lint`
+- `typecheck`: alias for `nr typecheck`
+- `usagecheck`: alias for `nr usagecheck`
+- `check`: alias for `nr check`
+- `test`: alias for `nr test`
 - `release`: alias for `nr release`
-
-You can also add the `node_modules/.bin` to your `PATH` while you are in a node project, so you can run the scripts directly without `npx`.
-
-```bash
-# Add current node_modules/.bin to PATH if it exists, so we can run npm scripts without `npx`
-if [ -d node_modules ]; then
-  export PATH="$PWD/node_modules/.bin:$PATH";
-fi
-```
