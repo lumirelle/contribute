@@ -4,25 +4,29 @@ Hey there! I'm really excited that you are interested in contributing. This is a
 
 ## 👨‍💻 Repository Setup
 
-We use `bun` for the Bun projects, and [`pnpm`](https://pnpm.io/) for the Node.js projects. We highly recommend you install [`ni`](https://github.com/antfu/ni) so you don't need to worry about the package manager when switching across different projects.
+### Bun / Node.js Projects
+
+_Bun_ is a newly introduced JavaScript runtime, which is faster than _Node.js_ in many aspects, as the alternative to _Node.js_.
+
+We use [`bun`](https://bun.com) itself as the package manager for the _Bun_ projects, and [`pnpm`](https://pnpm.io/) for the _Node.js_ projects. We highly recommend you install [`ni`](https://github.com/antfu/ni) so you don't need to worry about the package manager when switching across different projects.
 
 We will use `ni`'s commands in the following code snippets. If you are not using it, you can do the conversion yourself: `ni = pnpm/bun install`, `nr = pnpm/bun run`.
 
-To set the `Bun` repository up:
+To set the _Bun_ repository up:
 
 | Step | Command |
 | ---- | ------- |
-| 1. Install [Bun](https://bun.com/) | `curl -fsSL https://bun.sh/install \| bash` or `powershell -c "irm bun.sh/install.ps1 \| iex"` |
+| 1. Install [Bun](https://bun.com/) | [Installation Guides](https://bun.com/docs/installation) |
 | 2. Install [`@antfu/ni`](https://github.com/antfu/ni) | `bun i -g @antfu/ni` |
 | 3. Install dependencies under the project root | `ni` |
 
-To set the `Node.js` repository up:
+To set the _Node.js_ repository up:
 
 | Step | Command |
 | ---- | ------- |
 | 1. Install [Node.js](https://nodejs.org/), using the [latest LTS](https://nodejs.org/en/about/releases/) | [Installation Guides](https://nodejs.org/en/download) |
 | 2. [Enable Corepack](#corepack) | `corepack enable` |
-| 3. Install [`@antfu/ni`](https://github.com/antfu/ni) (If you already install this package on bun, you can skip this step) | `npm i -g @antfu/ni` |
+| 3. Install [`@antfu/ni`](https://github.com/antfu/ni)<br><br>If you have setup _Bun_ on your system and install this package by it before, you can skip this step. With this two runtime both on your system, you just need to choose any one of them to install global package, as you like | `npm i -g @antfu/ni` |
 | 4. Install dependencies under the project root | `ni` |
 
 ## 💡 Commands
@@ -31,7 +35,7 @@ To set the `Node.js` repository up:
 
 Start the development environment.
 
-If it's a Node.js package, it will start the build process in watch mode using [`tsdown`](https://github.com/rolldown/tsdown).
+If it's a Bun / Node.js package, it will start the build process in watch mode using [`bunup`](https://bunup.dev/) / [`tsdown`](https://github.com/rolldown/tsdown).
 
 If it's a frontend project, it usually starts the dev server. You can then develop and see the changes in real time.
 
@@ -51,31 +55,35 @@ If the project contains documentation, you can run `nr docs` to start the docume
 
 ### `nr play`
 
-If it's a Node.js package, it starts a dev server for the playground. The code is usually under `playground/`.
+If the project contains playground, it starts a dev server for the playground. The code is usually under `playground/`.
 
 ### `nr lint`
 
-We use [ESLint](https://eslint.org/) for **both linting and formatting** (sometimes we also use [Stylelint](https://stylelint.io/) for style files). It also lints for JSON, YAML and Markdown files if exists.
+We use [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) and [ESLint](https://eslint.org/) for linting, and we are still migrating from ESLint to Oxlint gradually. See https://github.com/antfu/eslint-config/issues/767.
 
-You can run `nr lint --fix` to let ESLint formats and lints the code.
+You can run `nr lint` to let them lint the code, and `nr lint:fix` to let them fix the code if possible.
 
-Learn more about the [ESLint Setup](#eslint).
+Learn more about the [Linter Setup](#linter).
 
-[**We don't use Prettier**](#no-prettier).
+[**We don't use Prettier**](#no-prettier), but we currently use [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) to format the code. We may switch to Oxlint soon after we have fully migrated to it.
 
-### `nr typecheck`
+### `nr check:type`
 
 If the project is written in TypeScript, you can run `nr typecheck` to run the TypeScript compiler with `--noEmits` option to make sure there is no type errors.
 
-### `nr usagecheck`
+### `nr check:usage`
 
 We believe less is more.
 
 We use [knip](https://knip.dev/) for usage checking to make sure there is no unused dependencies/files, or missing dependencies/files.
 
+### `nr check:dist`
+
+We use [publint](https://publint.dev/) and [arethetypeswrong](https://arethetypeswrong.github.io/) to check our distribution to make sure it's ready for publishing.
+
 ### `nr check`
 
-To run all checks (lint, typecheck, usagecheck), you can run `nr check`.
+To run all checks (lint, check:type, check:usage, check:dist...), you can run `nr check`.
 
 ### `nr test`
 
@@ -162,15 +170,21 @@ Before you do, make sure you have lastest git commit from upstream and all CI pa
 
 For most of the time, We do `nr release`. It will prompts a list for the target version you want to release. After select, it will bump your package.json and commit the changes with git tag, powered by [`bumpp`](https://github.com/antfu/bumpp).
 
-As NPM will [deprecate the access tokens soon](https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/), now we only build packages on CI:
+As NPM has [deprecated the access tokens](https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/), now it's recommended to build packages on CI/CD, and we may only keep the manual build for the first time to publish the package to NPM:
 
 <table><tr><td valign="top">
 
-#### Build on CI
+#### Build Manually
+
+For the first time, please build the package and publish it to NPM manually. The CLI will ask you for your granular access tokens.
+
+</td></tr><tr><td valign="top">
+
+#### Build on CI/CD
 
 They will be triggered by the `v` prefixed git tag added by `bumpp`. The action is usually defined under `.github/workflows/release.yml`
 
-> When maintaining your own fork, you should change the package name and publish manually at the first time, then following the [guides](https://docs.npmjs.com/trusted-publishers) and setup trusted publishing on your NPM dashboard.
+When maintaining your own fork, you should change the package name and publish manually at the first time, then following the [guides](https://docs.npmjs.com/trusted-publishers) and setup trusted publishing on your NPM dashboard.
 
 </td></tr></table>
 
@@ -210,17 +224,17 @@ Under projects with configuration as shown on the right, corepack will install `
 
 </td></tr></table>
 
-### ESLint
+### Linter
 
-I use [ESLint](https://eslint.org/) for both linting and formatting with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config).
+We use [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) and [ESLint](https://eslint.org/) for linting, with [`@antfu/eslint-config`](https://github.com/antfu/eslint-config).
 
 <table><tr><td width="500px" valign="top">
 
 #### IDE Setup
 
-I recommend using [VS Code](https://code.visualstudio.com/) along with the [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+I recommend using [VS Code](https://code.visualstudio.com/) along with the [Oxc extension](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode) and [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
-With the settings on the right, you can have auto fix and formatting when you save the code you are editing.
+With the settings on the right, you can have auto fix when you save the code you are editing.
 
 </td><td width="500px"><br>
 
@@ -229,8 +243,8 @@ VS Code's `settings.json`
 ```json
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll": false,
-    "source.fixAll.eslint": true
+    "source.fixAll.oxc": "always",
+    "source.fixAll.eslint": "always",
   }
 }
 ```
@@ -239,7 +253,7 @@ VS Code's `settings.json`
 
 ### Stylelint
 
-Sometimes I use [Stylelint](https://stylelint.io/) to lint style files like CSS, SCSS or PostCSS, with [`@lumirelle/stylelint-config`](https://github.com/lumirelle/stylelint-config)
+Sometimes we use [Stylelint](https://stylelint.io/) to lint style files like CSS, SCSS or PostCSS, with [`@lumirelle/stylelint-config`](https://github.com/lumirelle/stylelint-config)
 
 <table><tr><td width="500px" valign="top">
 
@@ -256,7 +270,6 @@ VS Code's `settings.json`
 ```json
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll": false,
     "source.fixAll.stylelint": true
   }
 }
@@ -266,9 +279,11 @@ VS Code's `settings.json`
 
 ### No Prettier
 
-Since ESLint is already configured to format the code, there is no need to duplicate the functionality with Prettier ([_Why I don't Use Prettier_](https://antfu.me/posts/why-not-prettier)). To format the code, you can run `nr lint --fix` or referring the [ESLint section](#eslint) for IDE Setup.
+Since ESLint is already configured to format the code, there is no need to duplicate the functionality with Prettier ([_Why I don't Use Prettier_](https://antfu.me/posts/why-not-prettier)). To format the code, you can run `nr lint:fix` or referring the [ESLint section](#eslint) for IDE Setup.
 
 If you have Prettier installed in your editor, I recommend you disable it when working on the project to avoid conflict.
+
+But for now, we are using [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) to format the code, which has the same problems like Prettier, we may switch to Oxlint for formatting soon after we have fully migrated to it, then the title may be updated to "No Code Formatter" XD.
 
 ## 🗒 Additional Info
 
@@ -281,17 +296,3 @@ CLI Tools
 - [@sxzz/create](https://github.com/sxzz/create) - Command-line for creating projects from templates.
 - [ni](https://github.com/antfu/ni) - package manager alias
 - [taze](https://github.com/antfu/taze) - dependency updater
-
-In addition of `ni`, here is a few shell aliases to be even lazier:
-
-- `dev`: alias for `nr dev`
-- `build`: alias for `nr build`
-- `start`: alias for `nr start`
-- `docs`: alias for `nr docs`
-- `play`: alias for `nr play`
-- `lint`: alias for `nr lint`
-- `typecheck`: alias for `nr typecheck`
-- `usagecheck`: alias for `nr usagecheck`
-- `check`: alias for `nr check`
-- `test`: alias for `nr test`
-- `release`: alias for `nr release`
