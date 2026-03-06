@@ -51,7 +51,7 @@ If the project is a CLI tool, you can run `nr start` to run the CLI after buildi
 
 ### `nr docs`
 
-If the project contains documentation, you can run `nr docs` to start the documentation dev server. Use `nr docs:build` to build the docs for production.
+If the project contains documentation, you can run `nr docs` to start the documentation dev server. Use `nr docs:build` to build the docs for production, `nr start` to start the server after building the documentation.
 
 ### `nr play`
 
@@ -65,25 +65,27 @@ You can run `nr lint` to let them lint the code, and `nr lint:fix` to let them f
 
 Learn more about the [Linter Setup](#linter).
 
-[**We don't use Prettier**](#no-prettier), but we currently use [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) to format the code. We may switch to Oxlint soon after we have fully migrated to it.
+[**We don't use formatter, like Prettier and Oxfmt**](#no-formatter).
 
-### `nr check:type`
+### `nr typecheck`
 
 If the project is written in TypeScript, you can run `nr typecheck` to run the TypeScript compiler with `--noEmits` option to make sure there is no type errors.
 
-### `nr check:usage`
+Some projects might omit this script as the type checking is already done by Oxlint.
+
+### `nr unused`
 
 We believe less is more.
 
-We use [knip](https://knip.dev/) for usage checking to make sure there is no unused dependencies/files, or missing dependencies/files.
+We use [knip](https://knip.dev/) to make sure there is no unused dependencies/files, or missing dependencies/files.
 
-### `nr check:dist`
+### `nr pubcheck`
 
 We use [publint](https://publint.dev/) and [arethetypeswrong](https://arethetypeswrong.github.io/) to check our distribution to make sure it's ready for publishing.
 
 ### `nr check`
 
-To run all checks (lint, check:type, check:usage, check:dist...), you can run `nr check`.
+To run all checks (lint, typecheck, unused, pubcheck...), you can run `nr check`.
 
 ### `nr test`
 
@@ -277,19 +279,17 @@ VS Code's `settings.json`
 
 </td></tr></table>
 
-### No Prettier
+### No Formatter
 
-Since ESLint is already configured to format the code, there is no need to duplicate the functionality with Prettier ([_Why I don't Use Prettier_](https://antfu.me/posts/why-not-prettier)). To format the code, you can run `nr lint:fix` or referring the [ESLint section](#eslint) for IDE Setup.
+Since ESLint is already configured to format the code, there is no need to duplicate the functionality with Prettier and Oxlint ([_Why I don't Use Prettier_](https://antfu.me/posts/why-not-prettier)). To format the code, you can run `nr lint:fix` or referring the [ESLint section](#eslint) for IDE Setup.
 
-If you have Prettier installed in your editor, I recommend you disable it when working on the project to avoid conflict.
-
-But for now, we are using [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) to format the code, which has the same problems like Prettier, we may switch to Oxlint for formatting soon after we have fully migrated to it, then the title may be updated to "No Code Formatter" XD.
+If you have Prettier or Oxlint installed in your editor, I recommend you disable them when working on the project to avoid conflict.
 
 ## 🗒 Additional Info
 
 In case you are interested in, here is Lumirelle's personal configrations and setups:
 
-- [lumirelle/starship-butler](https://github.com/lumirelle/starship-butler) - Your best starship (means every things you need) butler. 😃
+- [@lumirelle/starship-butler](https://github.com/lumirelle/starship-butler) - Your best starship (means every things you need) butler. 😃
 
 CLI Tools
 
