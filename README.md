@@ -191,7 +191,7 @@ If you have Prettier or Oxlint installed in your editor, We recommend you disabl
 
 In case you are interested in, here is Lumirelle's personal configrations and setups:
 
-- [@lumirelle/starship-butler](https://github.com/lumirelle/starship-butler) - Your best starship (means every things you need) butler. 😃
+- [dotfiles](https://github.com/lumirelle/dotfiles) - My dotfiles. 😃
 
 CLI Tools
 
