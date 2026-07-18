@@ -46,9 +46,9 @@ If the project is a server application, you can run `mise run start` to start th
 
 If the project is a CLI tool, you can run `mise run start` to run the CLI after building the project.
 
-### `mise run docs:dev`
+### `mise run docs`
 
-If the project contains documentation, you can run `mise run docs:dev` to start the documentation dev server. Use `mise run docs:build` to build the docs for production, `mise run docs:start` to start the server after building the documentation.
+If the project contains documentation, you can run `mise run docs --dev` to start the documentation dev server. Use `mise run docs --build` to build the docs for production, `mise run docs --start` to start the server after building the documentation.
 
 ### `mise run play`
 
@@ -68,7 +68,7 @@ We use [hk](https://hk.jdx.dev/) to manager git hooks, code checking & code fixi
 
 ### `mise run fix`
 
-Like `mise run check, but will apply fixes automatically if available.
+Like `mise run check`, but will apply fixes automatically if available.
 
 ### `mise run test`
 
@@ -76,7 +76,7 @@ Run the tests.
 
 You can filter the tests to be run by `mise run test [match]`, for example, `mise run test foo` will only run test files that contain `foo`.
 
-For some projects, we might have multiple types of tests set up. For example `mise run test:unit` for unit tests, `mise run test:e2e` for end-to-end tests. `mise run test` commonly run them together, you can run them separately as needed.
+For some projects, we might have multiple types of tests set up. For example `mise run test --project unit` for unit tests, `mise run test --project e2e` for end-to-end tests. `mise run test` commonly run them together, you can run them separately as needed.
 
 #### Vitest
 
@@ -84,7 +84,7 @@ Config options are often under the `test` field of `vitest.config.ts` or `vite.c
 
 Vitest runs in [watch mode by default](https://vitest.dev/guide/features.html#watch-mode), so you can modify the code and see the test result automatically, which is great for [test-driven development](https://en.wikipedia.org/wiki/Test-driven_development).
 
-For projects using Vitest, we make `mise run test` running only once, and  `mise run test:watch` running with watch mode.
+For projects using Vitest, we make `mise run test` running only once, and `mise run test --watch` running with watch mode.
 
 ### `mise run release`
 
@@ -153,7 +153,7 @@ After bumpping, you should runing check, build and test to verify nothing breaks
 
 Before you do, make sure you have lastest git commit from upstream and all CI passes.
 
-For most of the time, We do `mise run release`. 
+For most of the time, We do `mise run release`.
 
 ## JS / TS
 
@@ -193,9 +193,9 @@ In case you are interested in, here is Lumirelle's personal configrations and se
 
 - [dotfiles](https://github.com/lumirelle/dotfiles) - My dotfiles. 😃
 
-CLI Tools
+Dev Tools
 
-- General:
-  - [@sxzz/create](https://github.com/sxzz/create) - Command-line for creating projects from templates.
-- For JS/TS:
-  - [taze](https://github.com/antfu/taze) - dependency updater
+  - [mise](https://mise.jdx.dev) - Your dev environment, prepped and ready
+  - [hk](https://hk.jdx.dev) - Fast, powerful, and flexible hook management for modern development workflows
+  - [nub](https://nubjs.com) - The all-in-one JavaScript toolkit that augments Node.js instead of trying to replace it
+  - [taze](https://github.com/antfu/taze) - A modern cli tool that keeps your deps fresh
